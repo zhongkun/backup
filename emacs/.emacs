@@ -179,3 +179,62 @@ editing AppleScript source." )
          (lambda ()
            (define-key objc-mode-map (kbd "C-c C-r") 'xcode:buildandrun)
          ))
+
+
+;;===== PyFlakes
+;; code checking via pyflakes+flymake
+(when (load "flymake" ) 
+  (defun flymake-pyflakes-init () 
+    (let* ((temp-file (flymake-init-create-temp-buffer-copy 
+                       'flymake-create-temp-inplace)) 
+           (local-file (file-relative-name 
+                        temp-file 
+                        (file-name-directory buffer-file-name)))) 
+      (list "/usr/local/bin/pyflakes" (list local-file)))) 
+  (add-to-list 'flymake-allowed-file-name-masks 
+               '("\\.py\\'" flymake-pyflakes-init))) 
+
+(add-hook 'find-file-hook 'flymake-find-file-hook)
+;;(load-library "flymake-cursor")  ;在minibuffer显示错误信息
+(global-set-key (kbd "<f11>") 'flymake-start-syntax-check)
+(global-set-key (kbd "<s-up>") 'flymake-goto-prev-error)
+(global-set-key (kbd "<s-down>") 'flymake-goto-next-error)
+
+(setq flymake-gui-warnings-enabled nil)
+(setq flymake-log-level 0)
+
+(custom-set-faces
+     '(flymake-errline ((((class color)) (:underline "red"))))
+     '(flymake-warnline ((((class color)) (:underline "yellow1")))))
+ (setq flymake-no-changes-timeout 600)
+
+(defun flymake-display-current-error ()
+  "Display errors/warnings under cursor."
+  (interactive)
+  (let ((ovs (overlays-in (point) (1+ (point)))))
+    (catch 'found
+      (dolist (ov ovs)
+        (when (flymake-overlay-p ov)
+          (message (overlay-get ov 'help-echo))
+          (throw 'found t))))))
+(defun flymake-goto-next-error-disp ()
+  "Go to next error in err ring, then display error/warning."
+  (interactive)
+  (flymake-goto-next-error)
+  (flymake-display-current-error))
+(defun flymake-goto-prev-error-disp ()
+  "Go to previous error in err ring, then display error/warning."
+  (interactive)
+  (flymake-goto-prev-error)
+  (flymake-display-current-error))
+
+(defvar flymake-mode-map (make-sparse-keymap))
+(define-key flymake-mode-map (kbd "C-c C-n") 'flymake-goto-next-error-disp)
+(define-key flymake-mode-map (kbd "C-c C-p") 'flymake-goto-prev-error-disp)
+(define-key flymake-mode-map (kbd "C-c C-j")
+  'flymake-display-err-menu-for-current-line)
+(or (assoc 'flymake-mode minor-mode-map-alist)
+    (setq minor-mode-map-alist
+          (cons (cons 'flymake-mode flymake-mode-map)
+                minor-mode-map-alist)))
+
