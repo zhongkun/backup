@@ -1,0 +1,22 @@
+;;;; Emacs Bookmark Format Version 1 ;;;;
+;;; This format is meant to be slightly human-readable;
+;;; nevertheless, you probably don't want to edit it.
+;;; -*- End Of Bookmark File Format Version Stamp -*-
+(("lisp_bookmark"
+ (filename . "~/Documents/pdf/GNU Emacs Lisp编程入门.pdf")
+ (front-context-string . "%PDF-1.3\n%\304\345\362\345\353\247")
+ (rear-context-string)
+ (position . 1)
+ (page . 52)
+ (handler . doc-view-bookmark-jump))
+("1"
+ (filename . "/d/code/android/huangzhongkun_DoubanFM-Android/src/com/douban/radio/offline/OfflineManager.java")
+ (front-context-string . "                ")
+ (rear-context-string . "als(channel)) {\n")
+ (position . 24214))
+("get_user"
+ (filename . "/d/code/web/python/DeliciousAPI/deliciousapi.py")
+ (front-context-string . "        This fun")
+ (rear-context-string . "lic bookmarks.\n\n")
+ (position . 34313))
+)

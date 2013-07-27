@@ -1,240 +1,154 @@
 ;; -*- Emacs-Lisp -*-
- 
 
-;; Time-stamp: <2010-04-09 10:22:51 Friday by ahei>
-
-;;(setq load-path (cons "" load-path))
+;; Private Emacs Configuration file 
+;; Mail:kun77416@gmail.com
 
 
-;; So the idea is that you copy/paste this code into your *scratch* buffer,
-;; hit C-j, and you have a working el-get.
+;; Import custom configuration
 
-;; el-get
+(add-to-list 'load-path "~/.emacs.d/lisp")
+(require 'elisp-load-dir)
+(elisp-load-dir "~/.emacs.d/init")
+;;(elisp-load-dir "~/.emacs.d/plugin/")
+;; then comes all the custom-set-faces stuff that emacs puts there
 
 
-;;;; 显示时间    
-(setq display-time-24hr-format t)    
-(setq display-time-day-and-date t)    (display-time)    
-;;;; 关闭启动画面    
-(setq inhibit-startup-message t)    
-;;;;设置大的kill ring    
-(setq kill-ring-max 150)    
-;;(tool-bar-mode nil);去掉那个大大的工具栏    
-;;(scroll-bar-mode nil);去掉滚动条，因为可以使用鼠标滚轮了 ^_^   
-(setq x-select-enable-clipboard t);支持emacs和外部程序的粘贴    
-(font-lock-mode t) ; 开启语法高亮    
-'(tab-width 4) ;;'(tab-width 4)  
+;; Enable Plugin
 
+;;plugin: ibuffer
 (global-set-key (kbd "C-x C-b") 'ibuffer)
 (autoload 'ibuffer "ibuffer" "List buffers." t)
 
-;;plugin install  
- ;;color theme     
-(add-to-list 'load-path "/Users/kun/.emacs.d/plugin/color-theme-6.6.0/")    
-(require 'color-theme)    
-(color-theme-initialize)    
-(color-theme-robin-hood)
-;;(color-theme-billw)
-;;(color-theme-charcoal-black) 
-
-
-(add-to-list 'load-path "~/.emacs.d/plugin/auto-complete-1.3.1/")
-(require 'auto-complete)
-(require 'auto-complete-config)
-(global-auto-complete-mode t)
-(setq-default ac-sources '(ac-source-words-in-same-mode-buffers))
-(add-hook 'emacs-lisp-mode-hook (lambda () (add-to-list 'ac-sources 'ac-source-symbols)))
-(add-hook 'auto-complete-mode-hook (lambda () (add-to-list 'ac-sources 'ac-source-filename)))
-(set-face-background 'ac-candidate-face "lightgray")
-(set-face-underline 'ac-candidate-face "darkgray")
-(set-face-background 'ac-selection-face "steelblue") ;;; 设置比上面截图中更好看的背景颜色
-(define-key ac-completing-map "\M-n" 'ac-next)  ;;; 列表中通过按M-n来向下移动
-(define-key ac-completing-map "\M-p" 'ac-previous)
-(setq ac-auto-start 2)
-(setq ac-dwim t)
-(define-key ac-mode-map (kbd "M-TAB") 'auto-complete)
-
-;;yasnippet
-(add-to-list 'load-path "~/.emacs.d/plugin/yasnippet-0.6.1c/")
-(require 'yasnippet)
-(yas/initialize) 
-(yas/load-directory "~/.emacs.d/plugin/yasnippet-0.6.1c/snippets")
-
-
-(define-key global-map "\C-c\C-g" 'goto-line) 
-
-(desktop-save-mode 1)
-
-;;session
-
-(add-to-list 'load-path "~/.emacs.d/plugin/session/")
-(require 'session)
-(add-hook 'after-init-hook
-          'session-initialize)
-(add-to-list 'session-globals-exclude
-             'org-mark-ring)
-
-(add-to-list 'load-path"~/.emacs.d/plugin/Pymacs/")
-;;(add-to-list 'load-path"~/.emacs.d/plugin/")
-(autoload 'pymacs-apply "pymacs")
-(autoload 'pymacs-call "pymacs")
-(autoload 'pymacs-eval "pymacs" nil t)
-(autoload 'pymacs-exec "pymacs" nil t)
-(autoload 'pymacs-load "pymacs" nil t)
-
-(pymacs-load "ropemacs" "rope-")
-(setq ropemacs-enable-autoimport t)
-
-;;;Also note that ropemacs may redefine some standard Emacs and your custom key
-;;bindings.  To prevent this, put the following example lines to your
-;;``~/.emacs`` *before* the lines presented above:
-
-(setq ropemacs-enable-shortcuts nil)
-(setq ropemacs-local-prefix "C-c C-p")
-
-(add-to-list 'load-path"~/.emacs.d/plugin/pycomplete//")
-(require 'pycomplete)
-(setq auto-mode-alist (cons '("\\.py$" . python-mode) auto-mode-alist))
-(autoload 'python-mode "python-mode" "Python editing mode." t)
-(setq interpreter-mode-alist(cons '("python" . python-mode)
-                           interpreter-mode-alist))
-
-;;;escope
-(add-to-list 'load-path"~/.emacs.d/plugin/cscope/")
-(require 'xcscope)
-(custom-set-variables
-  ;; custom-set-variables was added by Custom.
-  ;; If you edit it by hand, you could mess it up, so be careful.
-  ;; Your init file should contain only one such instance.
-  ;; If there is more than one, they won't work right.
- '(display-time-mode t)
- '(session-use-package t nil (session)))
-(custom-set-faces
-  ;; custom-set-faces was added by Custom.
-  ;; If you edit it by hand, you could mess it up, so be careful.
-  ;; Your init file should contain only one such instance.
-  ;; If there is more than one, they won't work right.
- )
+;;plugin: git-emacs
+(add-to-list 'load-path "~/.emacs.d/plugin/git-emacs/")
+(require 'git-emacs)
 
 
 
+(setenv "PATH" (concat "/usr/texbin:/usr/local/bin:" (getenv "PATH")))
+(setq exec-path (append '("/usr/texbin" "/usr/local/bin") exec-path))
+(load "auctex.el" nil t t)
+(load "preview-latex.el" nil t t)
 
-;;字体大小的配置过程 
-;;#xlsfonts ;display system fonts 
-;;# 
-(defun sacha/increase-font-size () 
-(interactive) 
-(set-face-attribute 'default 
-nil 
-:height 
-(ceiling (* 1.10 
-(face-attribute 'default :height))))) 
-(defun sacha/decrease-font-size () 
-(interactive) 
-(set-face-attribute 'default 
-nil 
-:height 
-(floor (* 0.9 
-(face-attribute 'default :height))))) 
-(global-set-key (kbd "C-+") 'sacha/increase-font-size) 
-(global-set-key (kbd "C--") 'sacha/decrease-font-size) 
+;;Doc-view
 
-;;(set-default-font "Courier New-12n") 
-(set-default-font "Menlo Regular-11")
+(defun wl-doc-view-bookmark-make-record ()
+  (nconc (bookmark-make-record-default)
+         `((page . ,(doc-view-current-page))
+           (resolution . ,doc-view-resolution)
+           (handler . wl-doc-view-bookmark-jump))))
 
+(defun wl-bookmark-get-resolution (bookmark)
+  "Get doc view resolution."
+  (or (bookmark-prop-get bookmark 'resolution)
+      (default-value 'doc-view-resolution)))
 
-;;AppleScript Configure
-(add-to-list 'load-path "~/.emacs.d/lisp/")
-(autoload 'applescript-mode "applescript-mode" "major mode for
-editing AppleScript source." )
-(setq auto-mode-alist
-      (cons '("\\.applescript$" . applescript-mode) auto-mode-alist))
+(defun wl-doc-view-bookmark-jump (bookmark)
+  (prog1 (doc-view-bookmark-jump bookmark)
+    (let ((resolution (wl-bookmark-get-resolution bookmark)))
+      (assert (> resolution 0))
+      (when (/= doc-view-resolution resolution)
+        (set (make-local-variable 'doc-view-resolution) resolution)
+        (doc-view-reconvert-doc)))))
 
-
-;;Xcode configure
-
-(add-to-list 'auto-mode-alist '("\\.mm?$" . objc-mode))
-(add-to-list 'auto-mode-alist '("\\.h$" . objc-mode))
-
-(add-to-list 'magic-mode-alist '("\\(.\\|\n\\)*\n@implementation" . objc-mode))
-(add-to-list 'magic-mode-alist '("\\(.\\|\n\\)*\n@interface" . objc-mode))
-(add-to-list 'magic-mode-alist '("\\(.\\|\n\\)*\n@protocol" . objc-mode))
+        
 
 
 
-(defun xcode:buildandrun ()
- (interactive)
- (do-applescript
-  (format
-   (concat
-    "tell application \"Xcode\" to activate \r"
-    "tell application \"System Events\" \r"
-    "     tell process \"Xcode\" \r"
-    "          keystroke \"r\" using {command down} \r"
-    "    end tell \r"
-    "end tell \r"
-    ))))
+;; Installation:
+;; In .emacs add:
+;; (require 'doubanfm)
 
-(add-hook 'objc-mode-hook
-         (lambda ()
-           (define-key objc-mode-map (kbd "C-c C-r") 'xcode:buildandrun)
-         ))
+;; (dolist (path-list (list "./lib/"
+;;                          "./lib/http-emacs"
+;;                          "./lib/emms-3.0"))
+;;   (add-to-list 'load-path
+;;                (expand-file-name path-list (file-name-directory load-file-name))))
+
+;; (require 'emms-setup)
+;; (require 'http-get)
+;; (require 'json)
+;; (emms-standard)
+;; (emms-default-players)
+;; (defvar playlist_url
+;;   "http://api.douban.com/v2/fm/playlist?type=n&channel=%s&app_name=pldoubanfms&version=2&sid=0&apikey=Key0c57daf39b62cfbf250790dad2286f3d")
+;; (defvar default-channel 27)
+;; (defvar length 0)
+
+;; (defun event (process message)
+;;   (parse-data))
+
+;; (defun parse-data ()
+;;   (set 'length 0)
+;;   (set 'currbuf (buffer-name (current-buffer)))
+;;   (switch-to-buffer "songs")
+;;   (set 'data (buffer-string))
+;;   (switch-to-buffer currbuf)
+;;   (set 'data (json-read-from-string data))
+;;   (set 'songs (cdr (car data)))
+;;   (if (vectorp songs)
+;;       (mapcar (lambda (x)
+;;                 (dolist (slst x)
+;;                   (if (string-equal (car slst) "url")
+;;                       (emms-add-url (cdr slst)))
+;;                   (if (string-equal (car slst) "length")
+;;                       (set 'length (+ length (cdr slst))))
+;;                   )) songs))
+;;   (unless (equal length 0)
+;;     (emms-start)))
+
+;; (defun get-play-list (&optional channel)
+;;   (http-get
+;;    (format playlist_url channel) nil 'event nil "songs"))
+
+;; (defun play-fm (&optional channel time)
+;;   (if time (sit-for time))
+;;   (unless channel (set 'channel default-channel))
+;;   (get-play-list channel)
+;;     (unless (equal length 0)
+;;       (sit-for length)
+;;       (play-fm))
+;;     (interactive))
+
+;; (defun pause-fm(&optional time) 
+;;   (if time (sit-for time))
+;;      (emms-stop)
+;;      (interactive))
+
+;; (defun continue-fm(&optional time)
+;;   (if time (sit-for time))
+;;    (emms-start)
+;;    (interactive))
 
 
-;;===== PyFlakes
-;; code checking via pyflakes+flymake
-(when (load "flymake" ) 
-  (defun flymake-pyflakes-init () 
-    (let* ((temp-file (flymake-init-create-temp-buffer-copy 
-                       'flymake-create-temp-inplace)) 
-           (local-file (file-relative-name 
-                        temp-file 
-                        (file-name-directory buffer-file-name)))) 
-      (list "/usr/local/bin/pyflakes" (list local-file)))) 
-  (add-to-list 'flymake-allowed-file-name-masks 
-               '("\\.py\\'" flymake-pyflakes-init))) 
+;; (defun play-channel (channel)
+;;   (play-fm channel)
+;;   (interactive))
 
-(add-hook 'find-file-hook 'flymake-find-file-hook)
-;;(load-library "flymake-cursor")  ;在minibuffer显示错误信息
-(global-set-key (kbd "<f11>") 'flymake-start-syntax-check)
-(global-set-key (kbd "<s-up>") 'flymake-goto-prev-error)
-(global-set-key (kbd "<s-down>") 'flymake-goto-next-error)
+;; (provide 'doubanfm)
 
-(setq flymake-gui-warnings-enabled nil)
-(setq flymake-log-level 0)
 
-(custom-set-faces
-     '(flymake-errline ((((class color)) (:underline "red"))))
-     '(flymake-warnline ((((class color)) (:underline "yellow1")))))
- (setq flymake-no-changes-timeout 600)
 
-(defun flymake-display-current-error ()
-  "Display errors/warnings under cursor."
-  (interactive)
-  (let ((ovs (overlays-in (point) (1+ (point)))))
-    (catch 'found
-      (dolist (ov ovs)
-        (when (flymake-overlay-p ov)
-          (message (overlay-get ov 'help-echo))
-          (throw 'found t))))))
-(defun flymake-goto-next-error-disp ()
-  "Go to next error in err ring, then display error/warning."
-  (interactive)
-  (flymake-goto-next-error)
-  (flymake-display-current-error))
-(defun flymake-goto-prev-error-disp ()
-  "Go to previous error in err ring, then display error/warning."
-  (interactive)
-  (flymake-goto-prev-error)
-  (flymake-display-current-error))
+(add-to-list 'load-path "~/.emacs.d/el-get/el-get/")
+(add-to-list 'load-path "~/.emacs.d/el-get/emacs-w3m/")
+ (unless (require 'el-get nil 'noerror)
+   (with-current-buffer
+      (url-retrieve-synchronously
+       "https://raw.github.com/dimitri/el-get/master/el-get-install.el")
+    (goto-char (point-max))
+     (eval-print-last-sexp)))
 
-(defvar flymake-mode-map (make-sparse-keymap))
-(define-key flymake-mode-map (kbd "C-c C-n") 'flymake-goto-next-error-disp)
-(define-key flymake-mode-map (kbd "C-c C-p") 'flymake-goto-prev-error-disp)
-(define-key flymake-mode-map (kbd "C-c C-j")
-  'flymake-display-err-menu-for-current-line)
-(or (assoc 'flymake-mode minor-mode-map-alist)
-    (setq minor-mode-map-alist
-          (cons (cons 'flymake-mode flymake-mode-map)
-                minor-mode-map-alist)))
+ (add-to-list 'el-get-recipe-path "~/.emacs.d/el-get-user/recipes")
+;;(el-get 'sync)
 
+;;(add-to-list 'exec-path "~/.emacs.d/el-get/emacs-w3m/")
+
+;;w3m
+;; (require 'w3m)
+;; (setq w3m-use-favicon nil)
+;; (setq w3m-command-arguments '("-cookie" "-F"))
+;; (setq w3m-use-cookies t)
+;; (setq w3m-home-page "http://www.google.com")
+
+
+(load-file "~/.emacs.d/plugin/emacs-for-python/epy-init.el")
