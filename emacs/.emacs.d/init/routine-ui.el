@@ -15,11 +15,15 @@
 '(tab-width 4) 
 
 
+(add-to-list 'custom-theme-load-path "~/.emacs.d/theme/molokai-theme/")
+(setq molokai-theme-kit t)
+(load-theme 'molokai t)
+
 ;;color theme     
-(add-to-list 'load-path "~/.emacs.d/plugin/color-theme-6.6.0/")    
-(require 'color-theme)    
-(color-theme-initialize)  
-(color-theme-solarized-dark)  
+;; (add-to-list 'load-path "~/.emacs.d/plugin/color-theme-6.6.0/")    
+;; (require 'color-theme)    
+;; (color-theme-initialize)  
+;; (color-theme-solarized-dark)  
 ;;(color-theme-robin-hood)
 ;;(color-theme-billw)
 ;;(color-theme-charcoal-black) 
